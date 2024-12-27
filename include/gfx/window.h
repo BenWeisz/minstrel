@@ -8,6 +8,7 @@
 
 #include "types.h"
 #include "log.h"
+#include "ui.h"
 
 typedef struct WINDOW
 {
@@ -22,5 +23,12 @@ u32 WINDOW_init(WINDOW* window);
 
 void WINDOW_cleanup(WINDOW* window);
 void WINDOW_destroy(WINDOW* window);
+
+void WINDOW_frame_begin(WINDOW* window);
+void WINDOW_frame_end(WINDOW* window);
+
+void WINDOW_render(WINDOW* window);
+
+u32 WINDOW_should_close(WINDOW* window);
 
 #endif // WINDOW_H
