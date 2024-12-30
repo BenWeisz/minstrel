@@ -8,11 +8,28 @@
 #include "cimgui.h"
 #include "cimgui_impl.h"
 
-void UI_init(GLFWwindow* glfw_window);
-void UI_destroy();
+#include <stdlib.h>
+
+#include "types.h"
+#include "log.h"
+#include "io/io.h"
+
+typedef struct UI
+{
+    GLFWwindow* window;
+    u32 width;
+    u32 height;
+} UI;
+
+UI* UI_create(GLFWwindow* window, const u32 width, const u32 height);
+u32 UI_init(UI* ui);
+void UI_init_fonts();
+
+void UI_cleanup(UI* ui);
+void UI_destroy(UI* ui);
 
 void UI_frame_begin();
 void UI_frame_end();
-void UI_render();
+void UI_render(UI* ui);
 
 #endif // UI_H

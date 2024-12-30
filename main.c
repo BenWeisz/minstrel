@@ -17,7 +17,14 @@ int main(void)
     }
 
     // Initialize the UI
-    UI_init(window->window);
+    UI* ui = UI_create(window->window, window->width, window->height);
+    if (!ui)
+    {
+        WINDOW_destroy(window);
+        return -1;
+    }
+
+    WINDOW_set_ui(window, ui);
 
     // Loop until the user closes the window
     while (!WINDOW_should_close(window))
@@ -28,7 +35,7 @@ int main(void)
     }
 
     // Destroy the UI and WINDOW
-    UI_destroy();
+    UI_destroy(ui);
 	WINDOW_destroy(window);
 
     return 0;

@@ -1,8 +1,13 @@
 #include "gfx/window.h"
 
-float BKG_COLOR[3] = {229 / 255.0, 220 / 255.0, 197 / 255.0};
+void WINDOW_size_callback(GLFWwindow* window, i32 width, i32 height)
+{
+	WINDOW* user_window = (WINDOW*)glfwGetWindowUserPointer(window);
+	user_window->width = width;
+	user_window->height = height;
+}
 
-WINDOW* WINDOW_create(const unsigned int width, const unsigned int height, const char* title)
+WINDOW* WINDOW_create(const i32 width, const i32 height, const char* title)
 {
 	WINDOW* window = (WINDOW*)malloc(sizeof(WINDOW));
 	if (window == NULL)
@@ -32,21 +37,24 @@ u32 WINDOW_init(WINDOW* window)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
 	window->window = glfwCreateWindow(window->width, window->height, window->title, NULL, NULL);
 	if (!window->window) return 0;
 
 	glfwMakeContextCurrent(window->window);
 
+	glfwGetWindowSize(window->window, &(window->width), &(window->height));
+    glfwSetWindowPos(window->window, 0, 0);
+
+	glfwSetWindowUserPointer(window->window, (void*)window);
+	glfwSetWindowSizeCallback(window->window, WINDOW_size_callback);
+
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         LOG_ERROR("gladLoadGLLoader\n");
         return 0;
     }
-
-	const GLFWvidmode* vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    glfwSetWindowSize(window->window, vidmode->width, vidmode->height);
-    glfwSetWindowPos(window->window, 0, 0);
 
 	return 1;
 }
@@ -73,16 +81,16 @@ void WINDOW_destroy(WINDOW* window)
 
 void WINDOW_frame_begin(WINDOW* window)
 {
-	UI_frame_begin();
+	if (window->ui) UI_frame_begin();
 
 	/* Render here */
-	glClearColor(BKG_COLOR[0], BKG_COLOR[1], BKG_COLOR[2], 1.0);
+	glClearColor(21/255.0,44/255.0,67/255.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void WINDOW_frame_end(WINDOW* window)
 {
-	UI_frame_end();
+	if (window->ui) UI_frame_end();
 
 	/* Swap front and back buffers */
 	glfwSwapBuffers(window->window);
@@ -93,10 +101,15 @@ void WINDOW_frame_end(WINDOW* window)
 
 void WINDOW_render(WINDOW* window)
 {
-	UI_render();
+	if (window->ui) UI_render(window->ui);
 }
 
 u32 WINDOW_should_close(WINDOW* window)
 {
 	return glfwWindowShouldClose(window->window) ? 1 : 0;
+}
+
+void WINDOW_set_ui(WINDOW* window, UI* ui)
+{
+	window->ui = ui;
 }

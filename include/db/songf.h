@@ -7,7 +7,7 @@
     .songf file layout (little endian)
     
     0x00            Song Header
-    0x00-0x03       magic:                      0xEC 0xF4 0x5C 0x00
+    0x00-0x03       magic:                      0xCC 0x9D 0x1F 0x00
     0x04-0x07       name:                       Index into string table
     0x08-0x0B       section_table_size:         Section table size in bytes
     0x0C-0x0F       section_table_offset:       Section table bytes offset in .songf file
