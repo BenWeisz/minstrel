@@ -7,8 +7,8 @@
 #include <stdlib.h>
 
 #include "types.h"
-#include "log.h"
-#include "ui.h"
+#include "io/log.h"
+#include "ui/ui.h"
 
 typedef struct WINDOW
 {

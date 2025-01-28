@@ -1,9 +1,6 @@
 #ifndef UI_H
 #define UI_H
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 #define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 #include "cimgui.h"
 #include "cimgui_impl.h"
@@ -11,14 +8,24 @@
 #include <stdlib.h>
 
 #include "types.h"
-#include "log.h"
+#include "io/log.h"
 #include "io/io.h"
+
+#include "ui/ui_sdb.h"
+#include "ui/ui_sed.h"
+
+#include "db/song.h"
 
 typedef struct UI
 {
     GLFWwindow* window;
     u32 width;
     u32 height;
+
+    UI_SDB* ui_sdb;
+    UI_SED* ui_sed;
+
+    SONG* song;
 } UI;
 
 UI* UI_create(GLFWwindow* window, const u32 width, const u32 height);

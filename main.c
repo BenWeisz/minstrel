@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include "gfx/window.h"
-#include "gfx/ui.h"
+#include "ui/ui.h"
 
 int main(void)
 {

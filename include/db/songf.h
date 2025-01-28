@@ -8,50 +8,57 @@
     
     0x00            Song Header
     0x00-0x03       magic:                      0xCC 0x9D 0x1F 0x00
-    0x04-0x07       name:                       Index into string table
-    0x08-0x0B       section_table_size:         Section table size in bytes
-    0x0C-0x0F       section_table_offset:       Section table bytes offset in .songf file
-    0x10-0x13       ordering_table_size:        Ordering table size in bytes
-    0x14-0x17       ordering_table_offset:      Ordering table bytes offset in .songf file
-    0x18-0x1B       string_table_size:          String table size in bytes
-    0x1C-0x1F       string_table_offset:        String table size in bytes
+    0x04-0x07       name:                       Byte offset into string table (string table location denoted by SONGF.strings_offset)
+    0x08-0x0B       section_table_offset:       Byte offset into the .songf file where SONGF_SECTION_TABLE struct appears
+    0x0C-0x0F       ordering_table_offset:      Byte offset into the .songf file where the SONFG_ORDERING_TABLE struct appears
+    0x10-0x13       string_table_offset:        Byte offset into the .songf file where the SONGF_STRING_TABLE struct appears
     --------------------------------------------------------------------------------------
-    0x??            Sections Table              (section_table_offset in .songf)
+    0x??            Section Table               (section_table_offset in .songf file)
     ======
-    0x??+0          name:                       Index of song section's name in the string table
-    0x??+4          text:                       Index of song section's text in the string table
-    ======
-    0x??+8          name:                       Index of next song section's name in the string table
-    0x??+12         text:                       Index of next song section's text in the string table
-    ======
-    ... section_table_size ... total SONGF_SECTION's
+    0x??+0          section_count:              Number of SONGF_SECTION structs in the section table
+    0x??+4          section_offset:             Byte offset in the .songf file where the SONGF_SECTION structs appear
     --------------------------------------------------------------------------------------
-    0x??            Orderings Table             (ordering_table_offset in .songf)
+    0x??            Ordering Table              (ordering_table_offset in .songf file)
     ======
-    0x??+0          name:                       Index of song ordering's name in the string table
-    0x??+4          sections_size:              Number of sections part of this ordering
-    0x??+8          sections_offset:            Ordering data byte offset in the .songf file
-    ======
-    0x??+12         name:                       Index of next song ordering's name in the string table
-    0x??+16         sections_size:              Number of section's part of the next ordering
-    0x??+20         sections_offset:            Next ordering data byte offset in the .songf file
-    ======
-    ... ordering_table_size ... total SONGF_ORDERING's
+    0x??+0          ordering_count:            Number of SONGF_ORDERING structs in the odering table
+    0x??+4          ordering_offset:           Byte offset in the .songf file where the SONGF_ORDERING structs appear
+    0x??+8          ordering_blob_size:         Ordering data blob size in bytes 
+    0x??+12         ordering_blob_offset:       Ordering data blob offset in bytes from the start of the .songf file
     --------------------------------------------------------------------------------------
-    0x??            String Table                (string_table_offset in .songf)
+    0x??            String Table                (string_table_offset in .songf file)
     ======
-    0x??+0          size:                       UTF-8 string size in bytes
-    0x??+4          offset:                     Offset of this string in the .songf file
-    ======
-    0x??+8          size:                       Next UTF-8 string size in the bytes
-    0x??+12         offset:                     Offset of the next string in the .songf file
-    ======
-    ... string_table_size ... total SONGF_STRING's
+    0x??+0          string_blob_size:           String data blob size in bytes
+    0x??+4          string_blob_offset:         String data blob offset in bytes from the start of the .songf file   
     --------------------------------------------------------------------------------------
-    0x??            Ordering Data               (u32 data of section indices in ordering)
+    0x??            Sections
+    ======
+    0x??+0          name:                       Byte offset of name string in the string data blob
+    0x??+4          text:                       Byte offset of text string in the string data blob
+    ======
+    0x??+8          name:                       Byte offset of another name string in the string data blob
+    0x??+12         text:                       Byte offset of another text string in the string data blob
+    ======
+    ...
     --------------------------------------------------------------------------------------
-    0x??            String Data                 (Raw u8 data representing UTF-8 codepoints)
-
+    0x??            Orderings
+    ======
+    0x??+0          name:                       Byte offset of name string in the string data blob
+    0x??+4          sections_count:             Number of sections part of this ordering
+    0x??+8          sections_offset:            u32 offset of sections data in ordering data blob
+    ======
+    0x??+12         name:                       Byte offset of the 
+    0x??+16         sections_count:             Number of sections part of another ordering
+    0x??+20         sections_offset:            u32 offset of sections data of another ordering in ordering data blob
+    ======
+    ... 
+    --------------------------------------------------------------------------------------
+    0x??            Orderings Data             (Located at SONFG_ORDERING_TABLE.ordering_offset bytes from the start of the .songf file)
+    ======
+    0x??+0          Data Blob                  List of u32's specifying indices from the sections struct which are part of each of the orderings
+    --------------------------------------------------------------------------------------
+    0x??            String Data                (Located at SONGF_STRING_TABLE.string_blob_offset bytes from the start of the .songf file)
+    ======
+    0x??+0          Data Blob                  List of null terminated, UTF-8 encoded strings
 */
 
 typedef struct SONGF
@@ -59,13 +66,8 @@ typedef struct SONGF
     u32 magic;
     u32 name;
 
-    u32 section_table_size;
     u32 section_table_offset;
-
-    u32 ordering_table_size;
     u32 ordering_table_offset;
-
-    u32 string_table_size;
     u32 string_table_offset;
 } SONGF;
 
@@ -75,17 +77,32 @@ typedef struct SONGF_SECTION
     u32 text;
 } SONGF_SECTION;
 
+typedef struct SONGF_SECTION_TABLE
+{
+    u32 section_count;
+    u32 section_offset;
+} SONGF_SECTION_TABLE;
+
 typedef struct SONGF_ORDERING
 {
     u32 name;
-    u32 sections_size;
+    u32 sections_count;
     u32 sections_offset;
 } SONGF_ORDERING;
 
-typedef struct SONGF_STRING
+typedef struct SONFG_ORDERING_TABLE
 {
-    u32 size;
-    u32 offset;
-} SONGF_STRING;
+    u32 ordering_count;
+    u32 ordering_offset;
+
+    u32 ordering_blob_size;
+    u32 ordering_blob_offset;
+} SONGF_ORDERING_TABLE;
+
+typedef struct SONGF_STRING_TABLE
+{
+    u32 string_blob_size;
+    u32 string_blob_offset;
+} SONGF_STRING_TABLE;
 
 #endif // SONGF_H

@@ -1,4 +1,4 @@
-#include "gfx/ui.h"
+#include "ui/ui.h"
 
 UI* UI_create(GLFWwindow* window, const u32 width, const u32 height)
 {
@@ -12,6 +12,9 @@ UI* UI_create(GLFWwindow* window, const u32 width, const u32 height)
     ui->window = window;
     ui->width = width;
     ui->height = height;
+    ui->ui_sdb = NULL;
+    ui->ui_sed = NULL;
+    ui->song = NULL;
 
     u32 r = UI_init(ui);
     if (r == 0)
@@ -31,6 +34,21 @@ u32 UI_init(UI* ui)
 	ImGui_ImplOpenGL3_Init("#version 150");
 
     UI_init_fonts();
+
+    ui->ui_sdb = UI_SDB_create();
+    if (ui->ui_sdb == NULL)
+        return 0;
+
+    ui->ui_sed = UI_SED_create();
+    if (ui->ui_sed == NULL)
+        return 0;
+
+    ui->song = SONG_create();
+    if (ui->song == NULL)
+        return 0;
+
+    UI_SED_set_song(ui->ui_sed, ui->song);
+    UI_SED_update_from_song(ui->ui_sed);
 
     return 1;
 }
@@ -74,6 +92,15 @@ void UI_cleanup(UI* ui)
     ui->width = 0;
     ui->height = 0;
 
+    UI_SDB_destroy(ui->ui_sdb);
+    ui->ui_sdb = NULL;
+    
+    UI_SED_destroy(ui->ui_sed);
+    ui->ui_sed = NULL;
+
+    SONG_destroy(ui->song);
+    ui->song = NULL;
+
     /* Free ImGui resources */
    	ImGui_ImplOpenGL3_Shutdown();
    	ImGui_ImplGlfw_Shutdown();
@@ -82,6 +109,7 @@ void UI_cleanup(UI* ui)
 
 void UI_destroy(UI* ui)
 {
+    if (ui == NULL) return;
     UI_cleanup(ui);
     free(ui);
 }
@@ -101,11 +129,8 @@ void UI_frame_end()
 
 void UI_render(UI* ui)
 {
-    ImGuiWindowFlags window_flags = 0;
-    window_flags |= ImGuiWindowFlags_NoCollapse;
-
-    igBegin("Song DB", NULL, window_flags);
-    igEnd();
+    UI_SDB_render(ui->ui_sdb);
+    UI_SED_render(ui->ui_sed);
 
     /* Render ImGui data */
     igRender();

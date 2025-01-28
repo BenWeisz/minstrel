@@ -70,8 +70,12 @@ set_target_properties(cimgui PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_
 # Common sources go here
 set(SOURCE_FILES main.c
 	src/gfx/window.c
-	src/gfx/ui.c
+	src/ui/ui.c
+	src/ui/ui_util.c
+	src/ui/ui_sdb.c
+	src/ui/ui_sed.c
 	src/io/io.c
+	src/db/song.c
 	)
 
 # Configure! Set up the platform dependent sources
