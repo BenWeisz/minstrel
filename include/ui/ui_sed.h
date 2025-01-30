@@ -25,10 +25,16 @@ typedef struct UI_SED
     // Song being edited
     SONG* song;
 
+    u32 width;
+    u32 height;
+
+    char pack_name[MAX_SMALL_STR_SIZE];
+    u32 pack_index;
+
     char title[MAX_SMALL_STR_SIZE];
 } UI_SED;
 
-UI_SED* UI_SED_create();
+UI_SED* UI_SED_create(u32 width, u32 height);
 u32 UI_SED_init(UI_SED* ui_sed);
 
 void UI_SED_render(UI_SED* ui_sed);

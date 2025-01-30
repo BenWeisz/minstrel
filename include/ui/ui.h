@@ -30,6 +30,8 @@ typedef struct UI
 
 UI* UI_create(GLFWwindow* window, const u32 width, const u32 height);
 u32 UI_init(UI* ui);
+
+void UI_init_style();
 void UI_init_fonts();
 
 void UI_cleanup(UI* ui);

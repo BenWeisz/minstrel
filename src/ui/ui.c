@@ -33,13 +33,14 @@ u32 UI_init(UI* ui)
 	ImGui_ImplGlfw_InitForOpenGL(ui->window, 1);
 	ImGui_ImplOpenGL3_Init("#version 150");
 
+    UI_init_style();
     UI_init_fonts();
 
     ui->ui_sdb = UI_SDB_create();
     if (ui->ui_sdb == NULL)
         return 0;
 
-    ui->ui_sed = UI_SED_create();
+    ui->ui_sed = UI_SED_create(ui->width / 4, ui->height * (3.0 / 4));
     if (ui->ui_sed == NULL)
         return 0;
 
@@ -51,6 +52,15 @@ u32 UI_init(UI* ui)
     UI_SED_update_from_song(ui->ui_sed);
 
     return 1;
+}
+
+void UI_init_style()
+{
+    ImGuiStyle* style = igGetStyle();
+    igStyleColorsClassic(style);
+
+    ImVec2 separator_text_padding = { 20, 5 };
+    style->SeparatorTextPadding = separator_text_padding;
 }
 
 void UI_init_fonts()

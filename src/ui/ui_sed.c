@@ -1,6 +1,6 @@
 #include "ui/ui_sed.h"
 
-UI_SED* UI_SED_create()
+UI_SED* UI_SED_create(u32 width, u32 height)
 {
     UI_SED* ui_sed = (UI_SED*)malloc(sizeof(UI_SED));
     if (ui_sed == NULL)
@@ -10,6 +10,12 @@ UI_SED* UI_SED_create()
     }
 
     ui_sed->song = NULL;
+    ui_sed->width = width;
+    ui_sed->height = height;
+
+    // TODO: Change this
+    strncpy(ui_sed->pack_name, "This is the pack name", MAX_SMALL_STR_SIZE - 1);
+    ui_sed->pack_index = 10;
 
     u32 r = UI_SED_init(ui_sed);
     if (r == 0)
@@ -41,18 +47,27 @@ void UI_SED_render(UI_SED* ui_sed)
     }
     else
     {
-        sprintf(window_title, "Song Editor | %s###sed-title", ui_sed->title);
+        sprintf(window_title, "Song Editor | %s (%u)###sed-title", ui_sed->title, ui_sed->pack_index);
     }
     
+    ImVec2 sed_dimensions = { ui_sed->width, ui_sed->height };
+    igSetNextWindowSize(sed_dimensions, 0);
     igBegin(window_title, NULL, window_flags);
 
-    // Song Title
-    igTextColored(UI_UTIL_COLOR_PINK, "Title:");
-    igSameLine(0.0, -1.0);
-    igText(ui_sed->title);
+    igSeparatorText("Meta Data");
+    
+    // Pack Data
+    igText("Pack: %s", ui_sed->pack_name);
+    igText("Index in Pack: %u", ui_sed->pack_index);
 
-    igTextColored(UI_UTIL_COLOR_PINK, "Pack:");
-    igTextColored(UI_UTIL_COLOR_PINK, "Pack #:");
+    // Song Title
+    igAlignTextToFramePadding();
+    igText("Song Title:");
+    igSameLine(0.0, -1.0);
+    igInputTextWithHint("###song-title-input", "Enter title for song", ui_sed->title, MAX_SMALL_STR_SIZE, 0, NULL, NULL);
+
+    igSeparatorText("Lyrics Data");
+    
 
     igEnd();
 }
