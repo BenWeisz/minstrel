@@ -40,8 +40,20 @@ u32 EVENT_MANAGER_init()
     }
     event_manager_instance->next_events->size = 0;
 
+    // Initialize the handler pointers and contexts
     memset(event_manager_instance->handlers, 0x00, sizeof(EVENT_MANAGER_HANDLER) * (MAX_COUNT_EVENT_TYPES + 1));
     memset(event_manager_instance->contexts, 0x00, sizeof(EVENT_MANAGER_HANDLER_CONTEXT) * (MAX_COUNT_EVENT_TYPES + 1));
+
+    // Initialize the event manager buffer
+    event_manager_instance->buffer.data = (u8*)malloc(sizeof(u8) * EVENT_MANAGER_BUFFER_SIZE);
+    if (event_manager_instance->buffer.data == NULL)
+    {
+        LOG_ERROR("malloc\n");
+        EVENT_MANAGER_cleanup();
+        return 0;
+    }
+    event_manager_instance->buffer.head = 0;
+    event_manager_instance->buffer.size = 0;
 
     return 1;
 }
@@ -57,6 +69,12 @@ void EVENT_MANAGER_cleanup()
     {
         free(event_manager_instance->next_events);
         event_manager_instance->curr_events = NULL;
+    }
+
+    if (event_manager_instance->buffer.data != NULL)
+    {
+        free(event_manager_instance->buffer.data);
+        event_manager_instance->buffer.data = NULL;
     }
     
     free(event_manager_instance);
@@ -115,4 +133,44 @@ void EVENT_MANAGER_handle_events()
 
         event_manager_instance->handlers[event->type](event, event_manager_instance->contexts[event->type]);
     }
+
+    event_manager_instance->buffer.size = 0;
+}
+
+void* EVENT_MANAGER_alloc(size_t size)
+{
+    if (size + event_manager_instance->buffer.head > EVENT_MANAGER_BUFFER_SIZE)
+    {
+        event_manager_instance->buffer.size += EVENT_MANAGER_BUFFER_SIZE - event_manager_instance->buffer.head;
+
+        if (size + event_manager_instance->buffer.size > EVENT_MANAGER_BUFFER_SIZE)
+        {
+            LOG_ERROR("Ran out of EVENT_MANAGER_BUFFER memory, increase EVENT_MANAGER_BUFFER_SIZE\n");
+            return NULL;
+        }
+
+        event_manager_instance->buffer.head = size;
+        event_manager_instance->buffer.size += size;
+
+        printf("head: %u, size: %u\n", event_manager_instance->buffer.head, event_manager_instance->buffer.size);
+
+        return (void*)event_manager_instance->buffer.data;
+    }
+    else
+    {
+        if (size + event_manager_instance->buffer.size > EVENT_MANAGER_BUFFER_SIZE)
+        {
+            LOG_ERROR("Ran out of EVENT_MANAGER_BUFFER memory, increase EVENT_MANAGER_BUFFER_SIZE\n");
+            return NULL;
+        }
+        
+        u8* addr = event_manager_instance->buffer.data + event_manager_instance->buffer.head;
+        event_manager_instance->buffer.head += size;
+        event_manager_instance->buffer.size += size;
+
+        printf("head: %u, size: %u\n", event_manager_instance->buffer.head, event_manager_instance->buffer.size);
+
+        return (void*)addr;
+    }
+
 }
