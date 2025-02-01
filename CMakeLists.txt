@@ -18,11 +18,11 @@ project(${EXE_NAME})
 # Configure! the language standard
 # Set C standard here (Used in App)
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_FLAGS "-Wall")
+set(CMAKE_C_FLAGS "-Wall -fsanitize=address")
 
 # Set C++ standard here (Used in cimgui lib)
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "-Wall")
+set(CMAKE_CXX_FLAGS "-Wall -fsanitize=address")
 
 # Configuration for Intel based macs
 if(APPLE)
@@ -75,6 +75,7 @@ set(SOURCE_FILES main.c
 	src/ui/ui_sdb.c
 	src/ui/ui_sed.c
 	src/io/io.c
+	src/event/event.c
 	src/db/song.c
 	)
 
