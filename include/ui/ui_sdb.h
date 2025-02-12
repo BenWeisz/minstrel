@@ -10,14 +10,23 @@
 
 #include "types.h"
 #include "io/log.h"
+#include "util/consts.h"
+
+#include "event/event.h"
+#include "event/event_types.h"
+#include "event/event_sed.inc"
 
 #include "ui/ui_util.h"
 
-#define UI_SDB_FILTER_SIZE 512
+typedef struct TEMP_SONG
+{
+    char* title;
+    char* path;
+} TEMP_SONG;
 
 typedef struct UI_SDB
 {
-    char filter[UI_SDB_FILTER_SIZE];
+    TEMP_SONG temp_songs[8];
 } UI_SDB;
 
 UI_SDB* UI_SDB_create();

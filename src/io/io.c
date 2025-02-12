@@ -78,6 +78,7 @@ char* IO_read_char(const char* path)
 char* IO_read_char_sized(const char* path, unsigned int* size)
 {
 	char* data = (char*)IO_read_internal(path, size, 1);
-	data[*size] = '\0';
+	if (data != NULL)
+		data[*size] = '\0';
 	return data;
 }

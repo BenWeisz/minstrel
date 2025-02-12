@@ -21,7 +21,22 @@ UI_SDB* UI_SDB_create()
 
 u32 UI_SDB_init(UI_SDB* ui_sdb)
 {
-    memset(ui_sdb->filter, 0, UI_SDB_FILTER_SIZE);
+    ui_sdb->temp_songs[0].title = "Title 1";
+    ui_sdb->temp_songs[0].path = "/Users/bweisz/dev/minstrel/data/db/0a5d0254.songf";
+    ui_sdb->temp_songs[1].title = "Title 2";
+    ui_sdb->temp_songs[1].path = "/Users/bweisz/dev/minstrel/data/db/0a5e0255.songf";
+    ui_sdb->temp_songs[2].title = "Title 3";
+    ui_sdb->temp_songs[2].path = "/Users/bweisz/dev/minstrel/data/db/0a5f0256.songf";
+    ui_sdb->temp_songs[3].title = "Title 4";
+    ui_sdb->temp_songs[3].path = "/Users/bweisz/dev/minstrel/data/db/0a600257.songf";
+    ui_sdb->temp_songs[4].title = "Title 5";
+    ui_sdb->temp_songs[4].path = "/Users/bweisz/dev/minstrel/data/db/0a610258.songf";
+    ui_sdb->temp_songs[5].title = "Title 6";
+    ui_sdb->temp_songs[5].path = "/Users/bweisz/dev/minstrel/data/db/0a620259.songf";
+    ui_sdb->temp_songs[6].title = "Title 7";
+    ui_sdb->temp_songs[6].path = "/Users/bweisz/dev/minstrel/data/db/0a63025a.songf";
+    ui_sdb->temp_songs[7].title = "Title 8";
+    ui_sdb->temp_songs[7].path = "/Users/bweisz/dev/minstrel/data/db/0a64025b.songf";
     return 1;
 }
 
@@ -29,34 +44,43 @@ void UI_SDB_render(UI_SDB* ui_sdb)
 {
     ImGuiWindowFlags window_flags = 0;
     window_flags |= ImGuiWindowFlags_NoCollapse;
+
     igBegin("Song DB", NULL, window_flags);
-    
-    igInputText("Filter", ui_sdb->filter, UI_SDB_FILTER_SIZE, ImGuiInputTextFlags_None, NULL, NULL);
 
-    UI_UTIL_help_marker("Search for any song title or lyrics\n");
+    igText("Song List:");
 
-    // for (int i = 0; i < 16; i++)
-    // {
-    //     printf("0x%x ", ui_sdb->filter[i]);
-    // }
-    // printf("\n");
-
-    ImVec2 songs_list_box_size = { -igGET_FLT_MIN(), 5 * igGetTextLineHeightWithSpacing() };
-    if (igBeginListBox("##songs_list_box", songs_list_box_size))
+    ImVec2 songs_list_box_dim = { -igGET_FLT_MIN(), 5 * igGetTextLineHeightWithSpacing() };
+    if (igBeginListBox("##songs_list_box", songs_list_box_dim))
     {
-        ImVec2 selectable_size = { 0, 0 };
-        igSelectable_Bool("one", false, ImGuiSelectableFlags_None, selectable_size);
-        igSelectable_Bool("two", false, ImGuiSelectableFlags_None, selectable_size);
-        igSelectable_Bool("three", false, ImGuiSelectableFlags_None, selectable_size);
-        igSelectable_Bool("foour", false, ImGuiSelectableFlags_None, selectable_size);
-        igSelectable_Bool("five", false, ImGuiSelectableFlags_None, selectable_size);
-        igSelectable_Bool("sixe", false, ImGuiSelectableFlags_None, selectable_size);
-        igSelectable_Bool("seven", false, ImGuiSelectableFlags_None, selectable_size);
-        igSelectable_Bool("eight", false, ImGuiSelectableFlags_None, selectable_size);
-        igSelectable_Bool("nine", false, ImGuiSelectableFlags_None, selectable_size);
-        igSelectable_Bool("ten", false, ImGuiSelectableFlags_None, selectable_size);
+        bool selected[8] = { false, false, false, false, false, false, false, false };
+        ImVec2 selectable_dim = { 0, 0 };
+        for (u32 i = 0; i < 8; i++)
+        {
+            igSelectable_Bool(ui_sdb->temp_songs[i].title, false, ImGuiSelectableFlags_None, selectable_dim);
+            if (igBeginPopupContextItem(NULL, ImGuiPopupFlags_MouseButtonRight))
+            {
+                ImVec2 edit_song_dim = { 0, 0 };
+                if (igSelectable_Bool("Edit Song", &(selected[i]), ImGuiSelectableFlags_None, edit_song_dim))
+                {
+                    EVENT_SED_OPEN_SONG* event_sed_open_song = EVENT_MANAGER_alloc(sizeof(EVENT_SED_OPEN_SONG));
+                    if (event_sed_open_song != NULL)
+                    {
+                        strncpy(event_sed_open_song->path, ui_sdb->temp_songs[i].path, MAX_SMALL_STR_SIZE - 1);
+                        event_sed_open_song->path[MAX_SMALL_STR_SIZE - 1] = '\0';
+
+                        EVENT event;
+                        event.type = EVENT_TYPE_SED_OPEN_SONG;
+                        event.data = event_sed_open_song;
+                        EVENT_MANAGER_add_event(event);
+                    }
+                }
+
+                igEndPopup();
+            }
+        }
         igEndListBox();
     }
+
     igEnd();
 }
 

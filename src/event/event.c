@@ -152,8 +152,6 @@ void* EVENT_MANAGER_alloc(size_t size)
         event_manager_instance->buffer.head = size;
         event_manager_instance->buffer.size += size;
 
-        printf("head: %u, size: %u\n", event_manager_instance->buffer.head, event_manager_instance->buffer.size);
-
         return (void*)event_manager_instance->buffer.data;
     }
     else
@@ -167,8 +165,6 @@ void* EVENT_MANAGER_alloc(size_t size)
         u8* addr = event_manager_instance->buffer.data + event_manager_instance->buffer.head;
         event_manager_instance->buffer.head += size;
         event_manager_instance->buffer.size += size;
-
-        printf("head: %u, size: %u\n", event_manager_instance->buffer.head, event_manager_instance->buffer.size);
 
         return (void*)addr;
     }

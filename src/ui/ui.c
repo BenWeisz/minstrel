@@ -48,9 +48,6 @@ u32 UI_init(UI* ui)
     if (ui->song == NULL)
         return 0;
 
-    UI_SED_set_song(ui->ui_sed, ui->song);
-    UI_SED_update_from_song(ui->ui_sed);
-
     return 1;
 }
 

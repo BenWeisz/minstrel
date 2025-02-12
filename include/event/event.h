@@ -36,7 +36,7 @@ typedef struct EVENT_LIST
 typedef void (*EVENT_MANAGER_HANDLER)(EVENT* event, void* context);
 typedef void* EVENT_MANAGER_HANDLER_CONTEXT;
 
-#define EVENT_MANAGER_BUFFER_SIZE 1024 * 16;
+#define EVENT_MANAGER_BUFFER_SIZE 1024 * 1024 * 16
 
 // Ring buffer
 typedef struct EVENT_MANAGER_BUFFER

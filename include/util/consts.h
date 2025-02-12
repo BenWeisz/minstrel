@@ -1,6 +1,7 @@
 #ifndef CONSTS_H
 #define CONSTS_H
 
+#define MAX_TINY_STR_SIZE 64
 #define MAX_SMALL_STR_SIZE 512
 #define MAX_LARGE_STR_SIZE 4096
 
