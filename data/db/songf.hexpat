@@ -5,9 +5,9 @@ struct SONGF
     u32 magic;
     u32 name;
 
+    type::Hex<u32> string_table_offset;
     type::Hex<u32> section_table_offset;
     type::Hex<u32> ordering_table_offset;
-    type::Hex<u32> string_table_offset;
 };
 
 struct SONGF_SECTION

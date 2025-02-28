@@ -65,7 +65,7 @@ void UI_SED_render(UI_SED* ui_sed)
     else
     {
         igText(ui_sed->song->path);
-        igText(ui_sed->song->title);
+        igText(ui_sed->song->name);
     }
 
 
@@ -150,24 +150,16 @@ void UI_SED_event_handler(EVENT* event, void* context)
             ui_sed->song = NULL;
         }
 
-        // TODO: Maybe we need to change the return type of handlers to u32
-        ui_sed->song = SONG_create();
-        if (ui_sed->song != NULL)
+        ui_sed->song = SONG_create(event_sed_open_song->path);
+        if (ui_sed->song == NULL)
         {
-            strncpy(ui_sed->song->path, event_sed_open_song->path, MAX_SMALL_STR_SIZE - 1);
-            ui_sed->song->path[MAX_SMALL_STR_SIZE - 1] = '\0';
-            u32 r = SONG_load(ui_sed->song);
-
-            if (r != 1)
-            {
-                LOG_ERROR("Failed to load song: %s\n", ui_sed->song->path);
-                return;
-            }
-
-            if (!ui_sed->is_open)
-            {
-                ui_sed->is_open = true;
-            }
+            LOG_ERROR("Failed to load song: %s\n", ui_sed->song->path);
+            return;
         }
-    }
+
+        if (!ui_sed->is_open)
+        {
+            ui_sed->is_open = true;
+        }
+}
 }

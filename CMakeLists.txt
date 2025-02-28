@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.20)
 # Configure! your exe name
 set(EXE_NAME minstrel)
 # Configure! this as the absolute path to your vendors folder, DO NOT USE RELATIVE PATHS!
-set(VENDORS "/Users/bweisz/vendors")
+set(VENDORS "/home/benweisz/vendors")
 # Configure! this if you want to build for the old intel based apple systems
 # set(INTEL_APPLE 1)
 
@@ -18,11 +18,11 @@ project(${EXE_NAME})
 # Configure! the language standard
 # Set C standard here (Used in App)
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_FLAGS "-Wall -fsanitize=address")
+# set(CMAKE_C_FLAGS "-Wall -fsanitize=address")
 
 # Set C++ standard here (Used in cimgui lib)
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "-Wall -fsanitize=address")
+# set(CMAKE_CXX_FLAGS "-Wall -fsanitize=address")
 
 # Configuration for Intel based macs
 if(APPLE)

@@ -44,10 +44,6 @@ u32 UI_init(UI* ui)
     if (ui->ui_sed == NULL)
         return 0;
 
-    ui->song = SONG_create();
-    if (ui->song == NULL)
-        return 0;
-
     return 1;
 }
 
@@ -105,8 +101,11 @@ void UI_cleanup(UI* ui)
     UI_SED_destroy(ui->ui_sed);
     ui->ui_sed = NULL;
 
-    SONG_destroy(ui->song);
-    ui->song = NULL;
+    if (ui->song != NULL)
+    {
+        SONG_destroy(ui->song);
+        ui->song = NULL;
+    }
 
     /* Free ImGui resources */
    	ImGui_ImplOpenGL3_Shutdown();

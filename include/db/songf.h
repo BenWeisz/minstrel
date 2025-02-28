@@ -8,10 +8,10 @@
     
     0x00            Song Header
     0x00-0x03       magic:                      0xCC 0x9D 0x1F 0x00
-    0x04-0x07       name:                       Byte offset into string table (string table location denoted by SONGF.strings_offset)
-    0x08-0x0B       section_table_offset:       Byte offset into the .songf file where SONGF_SECTION_TABLE struct appears
-    0x0C-0x0F       ordering_table_offset:      Byte offset into the .songf file where the SONFG_ORDERING_TABLE struct appears
-    0x10-0x13       string_table_offset:        Byte offset into the .songf file where the SONGF_STRING_TABLE struct appears
+    0x04-0x07       name:                       Byte offset into string table (string table location denoted by SONGF.string_table_offset)
+    0x08-0x0B       string_table_offset:        Byte offset into the .songf file where the SONGF_STRING_TABLE struct appears
+    0x0C-0x0F       section_table_offset:       Byte offset into the .songf file where SONGF_SECTION_TABLE struct appears
+    0x10-0x13       ordering_table_offset:      Byte offset into the .songf file where the SONFG_ORDERING_TABLE struct appears
     --------------------------------------------------------------------------------------
     0x??            Section Table               (section_table_offset in .songf file)
     ======
@@ -27,8 +27,8 @@
     --------------------------------------------------------------------------------------
     0x??            String Table                (string_table_offset in .songf file)
     ======
-    0x??+0          string_blob_size:           String data blob size in bytes
-    0x??+4          string_blob_offset:         String data blob offset in bytes from the start of the .songf file   
+    0x??+0          strings_blob_size:           String data blob size in bytes
+    0x??+4          strings_blob_offset:         String data blob offset in bytes from the start of the .songf file   
     --------------------------------------------------------------------------------------
     0x??            Sections
     ======
@@ -56,7 +56,7 @@
     ======
     0x??+0          Data Blob                  List of u32's specifying indices from the sections struct which are part of each of the orderings
     --------------------------------------------------------------------------------------
-    0x??            String Data                (Located at SONGF_STRING_TABLE.string_blob_offset bytes from the start of the .songf file)
+    0x??            String Data                (Located at SONGF_STRING_TABLE.strings_blob_offset bytes from the start of the .songf file)
     ======
     0x??+0          Data Blob                  List of null terminated, UTF-8 encoded strings
 */
@@ -66,9 +66,9 @@ typedef struct SONGF
     u32 magic;
     u32 name;
 
+    u32 string_table_offset;
     u32 section_table_offset;
     u32 ordering_table_offset;
-    u32 string_table_offset;
 } SONGF;
 
 typedef struct SONGF_SECTION
@@ -101,8 +101,8 @@ typedef struct SONFG_ORDERING_TABLE
 
 typedef struct SONGF_STRING_TABLE
 {
-    u32 string_blob_size;
-    u32 string_blob_offset;
+    u32 strings_blob_size;
+    u32 strings_blob_offset;
 } SONGF_STRING_TABLE;
 
 #endif // SONGF_H

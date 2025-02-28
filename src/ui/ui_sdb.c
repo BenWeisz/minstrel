@@ -22,7 +22,7 @@ UI_SDB* UI_SDB_create()
 u32 UI_SDB_init(UI_SDB* ui_sdb)
 {
     ui_sdb->temp_songs[0].title = "Title 1";
-    ui_sdb->temp_songs[0].path = "/Users/bweisz/dev/minstrel/data/db/0a5d0254.songf";
+    ui_sdb->temp_songs[0].path = "/home/benweisz/dev/minstrel/data/db/test.songf";
     ui_sdb->temp_songs[1].title = "Title 2";
     ui_sdb->temp_songs[1].path = "/Users/bweisz/dev/minstrel/data/db/0a5e0255.songf";
     ui_sdb->temp_songs[2].title = "Title 3";
