@@ -161,5 +161,5 @@ void UI_SED_event_handler(EVENT* event, void* context)
         {
             ui_sed->is_open = true;
         }
-}
+    }
 }

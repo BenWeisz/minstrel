@@ -22,8 +22,8 @@
     ======
     0x??+0          ordering_count:            Number of SONGF_ORDERING structs in the odering table
     0x??+4          ordering_offset:           Byte offset in the .songf file where the SONGF_ORDERING structs appear
-    0x??+8          ordering_blob_size:         Ordering data blob size in bytes 
-    0x??+12         ordering_blob_offset:       Ordering data blob offset in bytes from the start of the .songf file
+    0x??+8          orderings_blob_size:         Ordering data blob size in bytes 
+    0x??+12         orderings_blob_offset:       Ordering data blob offset in bytes from the start of the .songf file
     --------------------------------------------------------------------------------------
     0x??            String Table                (string_table_offset in .songf file)
     ======
@@ -95,8 +95,8 @@ typedef struct SONFG_ORDERING_TABLE
     u32 ordering_count;
     u32 ordering_offset;
 
-    u32 ordering_blob_size;
-    u32 ordering_blob_offset;
+    u32 orderings_blob_size;
+    u32 orderings_blob_offset;
 } SONGF_ORDERING_TABLE;
 
 typedef struct SONGF_STRING_TABLE

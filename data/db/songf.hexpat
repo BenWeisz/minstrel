@@ -34,14 +34,14 @@ struct SONFG_ORDERING_TABLE
     u32 ordering_count;
     type::Hex<u32> ordering_offset;
 
-    u32 ordering_blob_size;
-    type::Hex<u32> ordering_blob_offset;
+    u32 orderings_blob_size;
+    type::Hex<u32> orderings_blob_offset;
 };
 
 struct SONGF_STRING_TABLE
 {
-    u32 string_blob_size;
-    type::Hex<u32> string_blob_offset;
+    u32 strings_blob_size;
+    type::Hex<u32> strings_blob_offset;
 };
 
 SONGF songf @ 0x00;
@@ -52,4 +52,4 @@ SONGF_STRING_TABLE string_table @ songf.string_table_offset;
 SONGF_SECTION sections[section_table.section_count] @ section_table.section_offset;
 SONGF_ORDERING orderings[ordering_table.ordering_count] @ ordering_table.ordering_offset;
 
-u32 ordering0[orderings[0].sections_count] @ ordering_table.ordering_blob_offset + orderings[0].sections_offset;
+u32 ordering0[orderings[0].sections_count] @ ordering_table.orderings_blob_offset + orderings[0].sections_offset;
