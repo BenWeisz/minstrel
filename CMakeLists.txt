@@ -74,6 +74,7 @@ set(SOURCE_FILES main.c
 	src/ui/ui_util.c
 	src/ui/ui_sdb.c
 	src/ui/ui_sed.c
+	src/ui/ui_svu.c
 	src/io/io.c
 	src/event/event.c
 	src/db/song.c

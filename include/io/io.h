@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "io/log.h"
+
 #define RESOURCE "../data/"
 
 unsigned char* IO_read_internal(const char* path, unsigned int* size, const unsigned int padding);

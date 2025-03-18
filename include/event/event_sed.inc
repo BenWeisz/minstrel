@@ -1,7 +1,6 @@
 #ifndef EVENT_SED_INC
 #define EVENT_SED_INC
 
-#include "types.h"
 #include "util/consts.h"
 
 typedef struct EVENT_SED_OPEN_SONG

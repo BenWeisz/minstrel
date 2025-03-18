@@ -1,6 +1,8 @@
 #ifndef EVENT_TYPES_H
 #define EVENT_TYPES_H
 
+// 0x00 is RESERVED
 #define EVENT_TYPE_SED_OPEN_SONG    0x01
+#define EVENT_TYPE_SVU_OPEN_SONG    0x02
 
 #endif // EVENT_TYPES_H

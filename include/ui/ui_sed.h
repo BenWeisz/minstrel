@@ -43,7 +43,6 @@ void UI_SED_render(UI_SED* ui_sed);
 void UI_SED_cleanup(UI_SED* ui_sed);
 void UI_SED_destroy(UI_SED* ui_sed);
 
-// Event Handlers
 void UI_SED_event_handler(EVENT* event, void* context);
 
 #endif // UI_SED_H

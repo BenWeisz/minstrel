@@ -52,15 +52,13 @@ void UI_SDB_render(UI_SDB* ui_sdb)
     ImVec2 songs_list_box_dim = { -igGET_FLT_MIN(), 5 * igGetTextLineHeightWithSpacing() };
     if (igBeginListBox("##songs_list_box", songs_list_box_dim))
     {
-        bool selected[8] = { false, false, false, false, false, false, false, false };
         ImVec2 selectable_dim = { 0, 0 };
         for (u32 i = 0; i < 8; i++)
         {
             igSelectable_Bool(ui_sdb->temp_songs[i].title, false, ImGuiSelectableFlags_None, selectable_dim);
             if (igBeginPopupContextItem(NULL, ImGuiPopupFlags_MouseButtonRight))
             {
-                ImVec2 edit_song_dim = { 0, 0 };
-                if (igSelectable_Bool("Edit Song", &(selected[i]), ImGuiSelectableFlags_None, edit_song_dim))
+                if (igSelectable_Bool("Edit Song", false, ImGuiSelectableFlags_None, selectable_dim))
                 {
                     EVENT_SED_OPEN_SONG* event_sed_open_song = EVENT_MANAGER_alloc(sizeof(EVENT_SED_OPEN_SONG));
                     if (event_sed_open_song != NULL)
@@ -71,6 +69,20 @@ void UI_SDB_render(UI_SDB* ui_sdb)
                         EVENT event;
                         event.type = EVENT_TYPE_SED_OPEN_SONG;
                         event.data = event_sed_open_song;
+                        EVENT_MANAGER_add_event(event);
+                    }
+                }
+                else if (igSelectable_Bool("View Song", false, ImGuiSelectableFlags_None, selectable_dim))
+                {
+                    EVENT_SVU_OPEN_SONG* event_svu_open_song = EVENT_MANAGER_alloc(sizeof(EVENT_SVU_OPEN_SONG));
+                    if (event_svu_open_song != NULL)
+                    {
+                        strncpy(event_svu_open_song->path, ui_sdb->temp_songs[i].path, MAX_SMALL_STR_SIZE - 1);
+                        event_svu_open_song->path[MAX_SMALL_STR_SIZE - 1] = '\0';
+
+                        EVENT event;
+                        event.type = EVENT_TYPE_SVU_OPEN_SONG;
+                        event.data = event_svu_open_song;
                         EVENT_MANAGER_add_event(event);
                     }
                 }

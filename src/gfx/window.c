@@ -1,6 +1,12 @@
 #include "gfx/window.h"
 
-void WINDOW_size_callback(GLFWwindow* window, i32 width, i32 height)
+static void WINDOW_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+}
+
+static void WINDOW_size_callback(GLFWwindow* window, i32 width, i32 height)
 {
 	WINDOW* user_window = (WINDOW*)glfwGetWindowUserPointer(window);
 	user_window->width = width;
@@ -55,6 +61,8 @@ u32 WINDOW_init(WINDOW* window)
         LOG_ERROR("gladLoadGLLoader\n");
         return 0;
     }
+
+	glfwSetKeyCallback(window->window, WINDOW_key_callback);
 
 	return 1;
 }

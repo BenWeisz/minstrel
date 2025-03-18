@@ -13,8 +13,7 @@
 
 #include "ui/ui_sdb.h"
 #include "ui/ui_sed.h"
-
-#include "db/song.h"
+#include "ui/ui_svu.h"
 
 typedef struct UI
 {
@@ -24,8 +23,7 @@ typedef struct UI
 
     UI_SDB* ui_sdb;
     UI_SED* ui_sed;
-
-    SONG* song;
+    UI_SVU* ui_svu;
 } UI;
 
 UI* UI_create(GLFWwindow* window, const u32 width, const u32 height);

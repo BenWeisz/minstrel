@@ -5,7 +5,7 @@ unsigned char* IO_read_internal(const char* path, unsigned int* size, const unsi
 	FILE* file = fopen(path, "rb");
 	if (file == NULL)
 	{
-		printf("ERROR: Failed to open file: %s\n", path);
+		LOG_ERROR("Failed to open file: %s\n", path);
 		*size = 0;
 		return NULL;
 	}
@@ -14,7 +14,7 @@ unsigned char* IO_read_internal(const char* path, unsigned int* size, const unsi
 	int r = fseek(file, 0, SEEK_END);
 	if (r == -1)
 	{
-		printf("ERROR: Failed to seek to the end of the file\n");
+		LOG_ERROR("Failed to seek to the end of the file\n");
 		fclose(file);
 		*size = 0;
 		return NULL;
@@ -33,7 +33,7 @@ unsigned char* IO_read_internal(const char* path, unsigned int* size, const unsi
 	r = fseek(file, 0, SEEK_SET);
 	if (r == -1)
 	{
-		printf("ERROR: Failed to seek to the start of the file\n");
+		LOG_ERROR("Failed to seek to the start of the file\n");
 		fclose(file);
 		*size = 0;
 		return NULL;
@@ -42,7 +42,7 @@ unsigned char* IO_read_internal(const char* path, unsigned int* size, const unsi
 	unsigned char* data = (unsigned char*)malloc(sizeof(unsigned char) * (file_size + padding));
 	if (data == NULL)
 	{
-		printf("ERROR: Failed to allocate space for data\n");
+		LOG_ERROR("Failed to allocate space for data\n");
 		fclose(file);
 		*size = 0;
 		return NULL;
@@ -51,7 +51,7 @@ unsigned char* IO_read_internal(const char* path, unsigned int* size, const unsi
 	size_t bytes_read = fread(data, sizeof(unsigned char), file_size, file);
 	if (bytes_read != file_size)
 	{
-		printf("ERROR: Failed to read all of the file contents\n");
+		LOG_ERROR("Failed to read all of the file contents\n");
 		fclose(file);
 		*size = 0;
 		free(data);

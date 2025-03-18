@@ -1,6 +1,10 @@
 #ifndef UI_DB_H
 #define UI_DB_H
 
+/*
+    UI_SDB (Song Database)
+*/
+
 #define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 #include "cimgui.h"
 #include "cimgui_impl.h"
@@ -15,6 +19,7 @@
 #include "event/event.h"
 #include "event/event_types.h"
 #include "event/event_sed.inc"
+#include "event/event_svu.inc"
 
 #include "ui/ui_util.h"
 

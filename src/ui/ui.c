@@ -14,7 +14,7 @@ UI* UI_create(GLFWwindow* window, const u32 width, const u32 height)
     ui->height = height;
     ui->ui_sdb = NULL;
     ui->ui_sed = NULL;
-    ui->song = NULL;
+    ui->ui_svu = NULL;
 
     u32 r = UI_init(ui);
     if (r == 0)
@@ -42,6 +42,10 @@ u32 UI_init(UI* ui)
 
     ui->ui_sed = UI_SED_create(ui->width / 4, ui->height * (3.0 / 4));
     if (ui->ui_sed == NULL)
+        return 0;
+
+    ui->ui_svu = UI_SVU_create();
+    if (ui->ui_svu == NULL)
         return 0;
 
     return 1;
@@ -101,11 +105,8 @@ void UI_cleanup(UI* ui)
     UI_SED_destroy(ui->ui_sed);
     ui->ui_sed = NULL;
 
-    if (ui->song != NULL)
-    {
-        SONG_destroy(ui->song);
-        ui->song = NULL;
-    }
+    UI_SVU_destroy(ui->ui_svu);
+    ui->ui_svu = NULL;
 
     /* Free ImGui resources */
    	ImGui_ImplOpenGL3_Shutdown();
@@ -137,6 +138,7 @@ void UI_render(UI* ui)
 {
     UI_SDB_render(ui->ui_sdb);
     UI_SED_render(ui->ui_sed);
+    UI_SVU_render(ui->ui_svu);
 
     /* Render ImGui data */
     igRender();

@@ -36,7 +36,7 @@ void UI_SED_render(UI_SED* ui_sed)
 {
     if (!ui_sed->is_open) return;
 
-    ImGuiWindowFlags window_flags = 0;
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
     window_flags |= ImGuiWindowFlags_NoCollapse;
 
     // // Determine the window title
@@ -56,7 +56,7 @@ void UI_SED_render(UI_SED* ui_sed)
     igSetNextWindowSize(sed_dimensions, 0);
     // igBegin(window_title, NULL, window_flags);
 
-    igBegin("Song Editor", NULL, window_flags);
+    igBegin("Song Editor", &(ui_sed->is_open), window_flags);
 
     if (ui_sed->song == NULL)
     {
